@@ -116,6 +116,7 @@
         {
             Console.WriteLine("Välkommen till att-göra-listan!");            
             Todo.PrintHelp();
+            Todo.ReadListFromFile();
             string command;
             do
             {
@@ -124,11 +125,21 @@
                 {
                     Todo.PrintHelp();
                 }
-                else if (MyIO.Equals(command, "sluta"))
+
+                else if (MyIO.Equals(command, "ny"))
                 {
-                    Console.WriteLine("Hej då!");
-                    break;
+                    int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));                    
+                    string task = MyIO.ReadCommand("Skriv in uppgift: ");
+                    Todo.TodoItem item = new Todo.TodoItem(prio, task);
+                    Todo.list.Add(item);
+                    Console.WriteLine($"Uppgiften '{task}' (prio: {prio}) är nu tillagd!");
                 }
+                
+                else if (MyIO.Equals(command, "beskriv"))
+                {
+                    Todo.PrintTodoList(verbose: true);
+                }
+
                 else if (MyIO.Equals(command, "lista"))
                 {
                     if (MyIO.HasArgument(command, "allt"))
@@ -136,6 +147,38 @@
                     else
                         Todo.PrintTodoList(verbose: false);
                 }
+
+                else if (MyIO.Equals(command, "spara"))
+                {
+                    Console.WriteLine("Sparar inte än!");
+                }
+
+                else if (MyIO.Equals(command, "ladda"))
+                {
+                    Console.WriteLine("Laddar inte än!");
+                }
+
+                else if (MyIO.Equals(command, "aktivera"))
+                {
+                    Console.WriteLine("Aktiverar inte än!");
+                }
+
+                else if (MyIO.Equals(command, "klar"))
+                {
+                    Console.WriteLine("Klarar inte än!");
+                }
+
+                else if (MyIO.Equals(command, "vänta"))
+                {
+                    Console.WriteLine("Väntar inte än!");
+                }
+                
+                else if (MyIO.Equals(command, "sluta"))
+                {
+                    Console.WriteLine("Hej då!");
+                    break;
+                }
+                
                 else
                 {
                     Console.WriteLine($"Okänt kommando: {command}");
