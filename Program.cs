@@ -1,4 +1,7 @@
-﻿namespace dtp15_todolist
+﻿using System.Security.Principal;
+using System.Xml.Linq;
+
+namespace dtp15_todolist
 {
     public class Todo
     {
@@ -117,15 +120,36 @@
             Console.WriteLine("vänta /uppgift/      sätt status på uppgift till 'Waiting'");
             Console.WriteLine("sluta                spara senast laddade filen och avsluta programmet!");
         }
+
+        public static void saveOptions(string save)
+        {            
+            string folder = $@"{Environment.CurrentDirectory}";
+            string fullpath = @$"{folder}\{save}";            
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i] != null && i == 0)
+                {
+                    string textprint = $"{list[i].status}|{list[i].priority}|{list[i].task}|{list[i].taskDescription}";
+                    File.WriteAllText(fullpath, textprint + Environment.NewLine);                    
+                }
+                else if (list[i] != null & i > 0)
+                {
+                    string textprint = $"{list[i].status}|{list[i].priority}|{list[i].task}|{list[i].taskDescription}|";
+                    File.AppendAllText(fullpath, textprint + Environment.NewLine);
+                }
+            }
+            Console.WriteLine($"You have saved your progress. Filename: '{save}'");
+        }
     }
     class MainClass
     {
         public static void Main(string[] args)
         {
             Console.WriteLine("Välkommen till att-göra-listan!");            
-            Todo.PrintHelp();
-            Todo.ReadListFromFile();
+            Todo.PrintHelp();            
             string command;
+            bool ladda = false;
             do
             {
                 command = MyIO.ReadCommand("> ");
@@ -158,12 +182,13 @@
 
                 else if (MyIO.Equals(command, "spara"))
                 {
-                    Console.WriteLine("Sparar inte än!");
+                    Todo.saveOptions("todo.lis");
                 }
 
                 else if (MyIO.Equals(command, "ladda"))
                 {
-                    Console.WriteLine("Laddar inte än!");
+                    Todo.ReadListFromFile();
+                    ladda = true;
                 }
 
                 else if (MyIO.Equals(command, "aktivera"))
