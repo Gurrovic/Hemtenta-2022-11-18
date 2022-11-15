@@ -85,12 +85,20 @@
         {
             PrintHeadOrFoot(head: false, verbose);
         }
-        public static void PrintTodoList(bool verbose = false)
+        public static void PrintTodoList(bool verbose = false, string aktiv = "")
         {
-            PrintHead(verbose);
+            PrintHead(verbose);            
             foreach (TodoItem item in list)
             {
-                item.Print(verbose);
+                if (aktiv == "Active")
+                {
+                    if (item.status == Active)
+                        item.Print(verbose);
+                }
+                else
+                {
+                    item.Print(verbose);
+                } 
             }
             PrintFoot(verbose);
         }
@@ -137,15 +145,15 @@
                 
                 else if (MyIO.Equals(command, "beskriv"))
                 {
-                    Todo.PrintTodoList(verbose: true);
+                    Todo.PrintTodoList(verbose: true, "Active");
                 }
 
                 else if (MyIO.Equals(command, "lista"))
                 {
                     if (MyIO.HasArgument(command, "allt"))
-                        Todo.PrintTodoList(verbose: true);
-                    else
                         Todo.PrintTodoList(verbose: false);
+                    else
+                        Todo.PrintTodoList(verbose: false, "Active");
                 }
 
                 else if (MyIO.Equals(command, "spara"))
