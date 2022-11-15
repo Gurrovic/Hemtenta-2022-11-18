@@ -106,8 +106,7 @@
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Välkommen till att-göra-listan!");
-            Todo.ReadListFromFile();
+            Console.WriteLine("Välkommen till att-göra-listan!");            
             Todo.PrintHelp();
             string command;
             do
@@ -136,36 +135,5 @@
             }
             while (true);
         }
-    }
-    class MyIO
-    {
-        static public string ReadCommand(string prompt)
-        {
-            Console.Write(prompt);
-            return Console.ReadLine();
-        }
-        static public bool Equals(string rawCommand, string expected)
-        {
-            string command = rawCommand.Trim();
-            if (command == "") return false;
-            else
-            {
-                string[] cwords = command.Split(' ');
-                if (cwords[0] == expected) return true;
-            }
-            return false;
-        }
-        static public bool HasArgument(string rawCommand, string expected)
-        {
-            string command = rawCommand.Trim();
-            if (command == "") return false;
-            else
-            {
-                string[] cwords = command.Split(' ');
-                if (cwords.Length < 2) return false;
-                if (cwords[1] == expected) return true;
-            }
-            return false;
-        }
-    }
+    }    
 }
