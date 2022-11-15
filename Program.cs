@@ -95,11 +95,19 @@
             PrintFoot(verbose);
         }
         public static void PrintHelp()
-        {
-            Console.WriteLine("Kommandon:");
-            Console.WriteLine("hjälp    lista denna hjälp");
-            Console.WriteLine("lista    lista att-göra-listan");
-            Console.WriteLine("sluta    spara att-göra-listan och sluta");
+        {            
+            Console.WriteLine("Kommandon:");            
+            Console.WriteLine("hjälp                lista denna hjälp");
+            Console.WriteLine("ny                   skapa en ny uppgift");
+            Console.WriteLine("beskriv              lista alla 'Active' uppgifter (status, prioritet, namn och beskrivning");
+            Console.WriteLine("lista                lista alla 'Active' uppgifter (status, prioritet, namn och beskrivning");
+            Console.WriteLine("lista allt           lista alla uppgifter(oavsett status), status, prioritet och namn");
+            Console.WriteLine("spara                spara uppgifterna");
+            Console.WriteLine("ladda                ladda listan todo.list");
+            Console.WriteLine("aktivera /uppgift/   ladda listan todo.list");
+            Console.WriteLine("klar /uppgift/       ladda listan todo.list");
+            Console.WriteLine("vänta /uppgift/      sätt status på uppgift till 'Waiting'");
+            Console.WriteLine("sluta                spara senast laddade filen och avsluta programmet!");
         }
     }
     class MainClass
