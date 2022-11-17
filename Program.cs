@@ -9,13 +9,12 @@ namespace dtp15_todolist
     public class Todo
     {
         public static List<TodoItem> list = new List<TodoItem>();
-
         public const int Active = 1;
         public const int Waiting = 2;
         public const int Ready = 3;
         public static string lastFile = "";
         public static bool hasLoaded = false;
-        
+        public static string task;
 
         public static string StatusToString(int status)
         {
@@ -29,10 +28,9 @@ namespace dtp15_todolist
         }
         public class TodoItem
         {
-            public int status;
-            public int priority;
-            public string task;
-            public string taskDescription;
+            public int status, priority;            
+            public string task, taskDescription;
+            
             public TodoItem(int priority, string task, string taskDescription)
             {
                 this.status = Active;
@@ -87,41 +85,35 @@ namespace dtp15_todolist
             Console.WriteLine($"Läste {numRead} rader.");
             Todo.lastFile = filename;
         }
-
         public static void changeStatus(string command)
         {
-            string[] cwords = command.Split(' ', 2);
-            bool found = false;
+            string[] cwords = command.Split(' ', 2;            
             for (int i = 0; i < list.Count; i++)
             {                
                 if (list[i].task == cwords[1] && list[i].status != Active && cwords[0] == "aktivera")
                 {
                     list[i].status = 1;
-                    Console.WriteLine($"Status ändrad på {list[i].task} till 'aktiv'");
-                    found = true;
+                    Console.WriteLine($"Status ändrad på {list[i].task} till 'aktiv'");                    
                     break;
                 }                
                 else if (list[i].task == $"{cwords[1]}" && list[i].status != Waiting && cwords[0] == "vänta")
                 {
                     list[i].status = 2;
-                    Console.WriteLine($"Status ändrad på {list[i].task} till 'väntande'");
-                    found = true;
+                    Console.WriteLine($"Status ändrad på {list[i].task} till 'väntande'");                    
                     break;
                 }                
                 else if (list[i].task == $"{cwords[1]}" && list[i].status != Ready && cwords[0] == "klar")
                 {
                     list[i].status = 3;
-                    Console.WriteLine($"Status ändrad på {list[i].task} till 'klar'");
-                    found = true;
+                    Console.WriteLine($"Status ändrad på {list[i].task} till 'klar'");                    
                     break;
                 }
+                else if (i == list.Count - 1)
+                {
+                    Console.WriteLine("Uppgift finns ej på listan eller så är uppgiften redan den status du försöker byta till!");
+                }               
             }
-            if (found == false)
-            {
-                Console.WriteLine("Uppgift finns ej på listan eller så är uppgiften redan den status du försöker byta till!");
-            }
-        }
-
+        }        
         private static void PrintHeadOrFoot(bool head, bool verbose)
         {
             if (head)
@@ -177,10 +169,9 @@ namespace dtp15_todolist
             Console.WriteLine("vänta /uppgift/      sätt status på uppgift till 'Waiting'");
             Console.WriteLine("sluta                spara senast laddade filen och avsluta programmet!");
         }
-
         public static void spara(string save)
         {
-            string[] cwords = save.Split(' ');
+            string[] cwords = save.Split(' ', 2);
             string saveFile;
             if (cwords.Length == 1 && Todo.hasLoaded == true)
             {
@@ -195,18 +186,17 @@ namespace dtp15_todolist
                 saveFile = cwords[1];                
             }
             
-            string fullpath = @$"{Environment.CurrentDirectory}\{saveFile}";            
+            string fullpath = @$"{Environment.CurrentDirectory}\{saveFile}";
 
             for (int i = 0; i < list.Count; i++)
             {
+                string textprint = $"{list[i].status}|{list[i].priority}|{list[i].task}|{list[i].taskDescription}";
                 if (list[i] != null && i == 0)
-                {
-                    string textprint = $"{list[i].status}|{list[i].priority}|{list[i].task}|{list[i].taskDescription}";
+                {                    
                     File.WriteAllText(fullpath, textprint + Environment.NewLine);                    
                 }
                 else if (list[i] != null & i > 0)
-                {
-                    string textprint = $"{list[i].status}|{list[i].priority}|{list[i].task}|{list[i].taskDescription}|";
+                {                    
                     File.AppendAllText(fullpath, textprint + Environment.NewLine);
                 }
             }
@@ -214,27 +204,23 @@ namespace dtp15_todolist
         }
         public static void newEntry(string command)
         {
-            string[] uppgift = command.Split(' ');
-            
+            string[] uppgift = command.Split(' ', 2);
+
             if (uppgift.Length == 1)
             {
-                int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));                
-                string task = MyIO.ReadCommand("Skriv in uppgiftens namn: ");
-                string taskDescription = MyIO.ReadCommand("Skriv in en uppgiftsbeskrivning: ");
-                Todo.TodoItem item = new Todo.TodoItem(prio, task, taskDescription);
-                Todo.list.Add(item);
-                Console.WriteLine($"Uppgiften '{task}' (prio: {prio}) är nu tillagd!");
+                Todo.task = MyIO.ReadCommand("Skriv in uppgiftens namn: ");                
             }
             else
             {
                 Console.WriteLine($"Skapa en ny uppgift med namn: '{uppgift[1]}'");
-                string task = uppgift[1];
-                int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));                
-                string taskDescription = MyIO.ReadCommand("Skriv in en uppgiftsbeskrivning: ");
-                Todo.TodoItem item = new Todo.TodoItem(prio, task, taskDescription);
-                Todo.list.Add(item);
-                Console.WriteLine($"Uppgiften '{task}' (prio: {prio}) är nu tillagd!");
+                Todo.task = uppgift[1];                
             }
+            
+            int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));
+            string taskDescription = MyIO.ReadCommand("Skriv in en uppgiftsbeskrivning: ");
+            Todo.TodoItem item = new Todo.TodoItem(prio, task, taskDescription);
+            Todo.list.Add(item);
+            Console.WriteLine($"Uppgiften '{Todo.task}' (prio: {prio}) är nu tillagd!");
         }
     }
     class MainClass
@@ -243,8 +229,8 @@ namespace dtp15_todolist
         {
             Console.WriteLine("Välkommen till att-göra-listan!");            
             Todo.PrintHelp();            
-            string command;            
-
+            string command;
+            
             do
             {
                 command = MyIO.ReadCommand("> ");
