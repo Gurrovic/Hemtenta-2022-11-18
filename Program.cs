@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System.Data;
+using System.Security.Principal;
 using System.Xml.Linq;
 
 namespace dtp15_todolist
@@ -69,24 +70,24 @@ namespace dtp15_todolist
             Console.WriteLine($"Läste {numRead} rader.");
         }
 
-        public static void changeStatus(string command)
+        public static void changeStatus(string command, string input)
         {
             string[] cwords = command.Split(' ');
             for (int i = 0; i < list.Count; i++)
             {                
-                if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Active && cwords[0] == "aktivera")
+                if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Active && cwords[0] == input)
                 {
                     list[i].status = 1;
                     Console.WriteLine($"Status ändrad på {list[i].task} till 'aktiv'");
                     break;
                 }                
-                else if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Waiting && cwords[0] == "vänta")
+                else if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Waiting && cwords[0] == input)
                 {
                     list[i].status = 2;
                     Console.WriteLine($"Status ändrad på {list[i].task} till 'väntande'");
                     break;
                 }                
-                else if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Ready && cwords[0] == "klar")
+                else if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Ready && cwords[0] == input)
                 {
                     list[i].status = 3;
                     Console.WriteLine($"Status ändrad på {list[i].task} till 'klar'");
@@ -142,9 +143,11 @@ namespace dtp15_todolist
             Console.WriteLine("hjälp                lista denna hjälp");
             Console.WriteLine("ny                   skapa en ny uppgift");
             Console.WriteLine("beskriv              lista alla 'Active' uppgifter (status, prioritet, namn och beskrivning");
+            Console.WriteLine("beskriv allt         lista alla uppgifter (status, prioritet, namn och beskrivning");
             Console.WriteLine("lista                lista alla 'Active' uppgifter (status, prioritet och namn");
             Console.WriteLine("lista allt           lista alla uppgifter(oavsett status), status, prioritet och namn");
             Console.WriteLine("spara                spara uppgifterna");
+            Console.WriteLine("spara /filnamn/      spara uppgifterna till /filnamn/");
             Console.WriteLine("ladda                ladda listan todo.list");
             Console.WriteLine("aktivera /uppgift/   sätt status på uppgift till 'Active'");
             Console.WriteLine("klar /uppgift/       sätt status på uppgift till 'Ready'");
@@ -152,10 +155,20 @@ namespace dtp15_todolist
             Console.WriteLine("sluta                spara senast laddade filen och avsluta programmet!");
         }
 
-        public static void saveOptions(string save)
-        {            
-            string folder = $@"{Environment.CurrentDirectory}";
-            string fullpath = @$"{folder}\{save}";            
+        public static void spara(string save)
+        {
+            string[] cwords = save.Split(' ');
+            string saveFile;
+            if (cwords.Length == 1)
+            {
+                saveFile = "todo.lis";
+            }
+            else
+            {
+                saveFile = cwords[1];                
+            }
+            
+            string fullpath = @$"{Environment.CurrentDirectory}\{saveFile}.lis";            
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -170,7 +183,7 @@ namespace dtp15_todolist
                     File.AppendAllText(fullpath, textprint + Environment.NewLine);
                 }
             }
-            Console.WriteLine($"Du har sparat. Filnamn: '{save}'");
+            Console.WriteLine($"Du har sparat. Filnamn: '{saveFile}'");
         }
         public static void newEntry()
         {
@@ -203,7 +216,10 @@ namespace dtp15_todolist
 
                 else if (MyIO.Equals(command, "beskriv"))
                 {
-                    Todo.PrintTodoList(verbose: true, "Active");
+                    if (MyIO.HasArgument(command, "allt"))
+                        Todo.PrintTodoList(verbose: true);
+                    else
+                        Todo.PrintTodoList(verbose: true, "Active");
                 }
 
                 else if (MyIO.Equals(command, "lista"))
@@ -216,7 +232,7 @@ namespace dtp15_todolist
 
                 else if (MyIO.Equals(command, "spara"))
                 {
-                    Todo.saveOptions("todo.lis");
+                    Todo.spara(command);
                 }
 
                 else if (MyIO.Equals(command, "ladda"))
@@ -226,22 +242,24 @@ namespace dtp15_todolist
 
                 else if (MyIO.Equals(command, "aktivera"))
                 {
-                    Todo.changeStatus(command);                    
+                    Todo.changeStatus(command, "aktivera");                    
                 }
 
                 else if (MyIO.Equals(command, "klar"))
                 {
-                    Todo.changeStatus(command);
+                    Todo.changeStatus(command, "klar");
                 }
 
                 else if (MyIO.Equals(command, "vänta"))
                 {
-                    Todo.changeStatus(command);
+                    Todo.changeStatus(command, "vänta");
                 }
                 
                 else if (MyIO.Equals(command, "sluta"))
                 {
-                    Console.WriteLine("Hej då!");
+                    Todo.spara("todo.lis");
+                    Console.WriteLine("Programmet avslutas!");
+                    Console.ReadLine();
                     break;
                 }
                 
