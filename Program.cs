@@ -68,6 +68,37 @@ namespace dtp15_todolist
             sr.Close();
             Console.WriteLine($"Läste {numRead} rader.");
         }
+
+        public static void changeStatus(string command)
+        {
+            string[] cwords = command.Split(' ');
+            for (int i = 0; i < list.Count; i++)
+            {                
+                if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Active && cwords[0] == "aktivera")
+                {
+                    list[i].status = 1;
+                    Console.WriteLine($"Status ändrad på {list[i].task} till 'aktiv'");
+                    break;
+                }                
+                else if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Waiting && cwords[0] == "vänta")
+                {
+                    list[i].status = 2;
+                    Console.WriteLine($"Status ändrad på {list[i].task} till 'väntande'");
+                    break;
+                }                
+                else if (list[i].task == $"{cwords[1]} {cwords[2]}" && cwords.Length == 3 && list[i].status != Ready && cwords[0] == "klar")
+                {
+                    list[i].status = 3;
+                    Console.WriteLine($"Status ändrad på {list[i].task} till 'klar'");
+                    break;
+                }
+                else if (list[i].task != $"{cwords[1]} + {cwords[2]}" || cwords.Length != 3)
+                {
+                    Console.WriteLine("Uppgift finns ej på listan eller så har du ej angivit en uppgift!");
+                }
+            }            
+        }
+
         private static void PrintHeadOrFoot(bool head, bool verbose)
         {
             if (head)
@@ -111,12 +142,12 @@ namespace dtp15_todolist
             Console.WriteLine("hjälp                lista denna hjälp");
             Console.WriteLine("ny                   skapa en ny uppgift");
             Console.WriteLine("beskriv              lista alla 'Active' uppgifter (status, prioritet, namn och beskrivning");
-            Console.WriteLine("lista                lista alla 'Active' uppgifter (status, prioritet, namn och beskrivning");
+            Console.WriteLine("lista                lista alla 'Active' uppgifter (status, prioritet och namn");
             Console.WriteLine("lista allt           lista alla uppgifter(oavsett status), status, prioritet och namn");
             Console.WriteLine("spara                spara uppgifterna");
             Console.WriteLine("ladda                ladda listan todo.list");
-            Console.WriteLine("aktivera /uppgift/   ladda listan todo.list");
-            Console.WriteLine("klar /uppgift/       ladda listan todo.list");
+            Console.WriteLine("aktivera /uppgift/   sätt status på uppgift till 'Active'");
+            Console.WriteLine("klar /uppgift/       sätt status på uppgift till 'Ready'");
             Console.WriteLine("vänta /uppgift/      sätt status på uppgift till 'Waiting'");
             Console.WriteLine("sluta                spara senast laddade filen och avsluta programmet!");
         }
@@ -139,7 +170,15 @@ namespace dtp15_todolist
                     File.AppendAllText(fullpath, textprint + Environment.NewLine);
                 }
             }
-            Console.WriteLine($"You have saved your progress. Filename: '{save}'");
+            Console.WriteLine($"Du har sparat. Filnamn: '{save}'");
+        }
+        public static void newEntry()
+        {
+            int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));
+            string task = MyIO.ReadCommand("Skriv in uppgift: ");
+            Todo.TodoItem item = new Todo.TodoItem(prio, task);
+            Todo.list.Add(item);
+            Console.WriteLine($"Uppgiften '{task}' (prio: {prio}) är nu tillagd!");
         }
     }
     class MainClass
@@ -148,8 +187,7 @@ namespace dtp15_todolist
         {
             Console.WriteLine("Välkommen till att-göra-listan!");            
             Todo.PrintHelp();            
-            string command;
-            bool ladda = false;
+            string command;            
             do
             {
                 command = MyIO.ReadCommand("> ");
@@ -160,13 +198,9 @@ namespace dtp15_todolist
 
                 else if (MyIO.Equals(command, "ny"))
                 {
-                    int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));                    
-                    string task = MyIO.ReadCommand("Skriv in uppgift: ");
-                    Todo.TodoItem item = new Todo.TodoItem(prio, task);
-                    Todo.list.Add(item);
-                    Console.WriteLine($"Uppgiften '{task}' (prio: {prio}) är nu tillagd!");
+                    Todo.newEntry();
                 }
-                
+
                 else if (MyIO.Equals(command, "beskriv"))
                 {
                     Todo.PrintTodoList(verbose: true, "Active");
@@ -187,23 +221,22 @@ namespace dtp15_todolist
 
                 else if (MyIO.Equals(command, "ladda"))
                 {
-                    Todo.ReadListFromFile();
-                    ladda = true;
+                    Todo.ReadListFromFile();                   
                 }
 
                 else if (MyIO.Equals(command, "aktivera"))
                 {
-                    Console.WriteLine("Aktiverar inte än!");
+                    Todo.changeStatus(command);                    
                 }
 
                 else if (MyIO.Equals(command, "klar"))
                 {
-                    Console.WriteLine("Klarar inte än!");
+                    Todo.changeStatus(command);
                 }
 
                 else if (MyIO.Equals(command, "vänta"))
                 {
-                    Console.WriteLine("Väntar inte än!");
+                    Todo.changeStatus(command);
                 }
                 
                 else if (MyIO.Equals(command, "sluta"))
@@ -218,6 +251,6 @@ namespace dtp15_todolist
                 }
             }
             while (true);
-        }
+        }        
     }    
 }
