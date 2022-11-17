@@ -87,7 +87,7 @@ namespace dtp15_todolist
         }
         public static void changeStatus(string command)
         {
-            string[] cwords = command.Split(' ', 2;            
+            string[] cwords = command.Split(' ', 2);            
             for (int i = 0; i < list.Count; i++)
             {                
                 if (list[i].task == cwords[1] && list[i].status != Active && cwords[0] == "aktivera")
