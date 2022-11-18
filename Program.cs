@@ -12,9 +12,8 @@ namespace dtp15_todolist
         public const int Active = 1;
         public const int Waiting = 2;
         public const int Ready = 3;
-        public static string lastFile = "";
-        public static bool hasLoaded = false;
-        public static string Task;
+        public static string lastFile = "", Task;
+        public static bool hasLoaded = false;        
 
         public static string StatusToString(int status)
         {
@@ -87,7 +86,7 @@ namespace dtp15_todolist
         }
         public static void changeStatus(string command)
         {
-            string[] cwords = command.Split(' ', 2;            
+            string[] cwords = command.Split(' ', 2);            
             for (int i = 0; i < list.Count; i++)
             {                
                 if (list[i].task == cwords[1] && list[i].status != Active && cwords[0] == "aktivera")
