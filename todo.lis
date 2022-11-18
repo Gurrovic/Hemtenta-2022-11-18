@@ -1,0 +1,17 @@
+3|1|Se över koden|Skaffa förståelse för vad som behöver göras
+3|1|Todolist|Ta bort automatisk inladdning av todolist.|
+3|1|MyIO|Flytta klassen 'MyIO' till egen fil|
+3|1|lista|Enbart lista uppgifter med status "aktiv" (listar status, prioritet, och namn) (static void 'PrintToDoList')|
+3|1|lista allt|Lista alla uppgifter oavsett status (listar status, prioritet och namn) (static void 'PrintToDoList')|
+3|1|ny|För att kunna skapa en ny uppgift (ny metod: static void 'newEntry')|
+3|1|beskriv|För att lista alla uppgifters status, prioritet, namn och beskrivning (static void 'PrintToDoList')|
+3|1|spara|För att kunna spara uppgifter (ny metod: static void 'spara')|
+3|1|ladda|För att ladda listan 'todo.lis' (static void 'ReadListFromFile')|
+3|1|aktivera /uppgift/|För att sätta status på uppgift till Active (ny metod: static void 'changeStatus')|
+3|1|klar /uppgift/|För att sätta status på uppgift till Ready (static void 'changeStatus')|
+3|1|vänta /uppgift/|För att sätt status på uppgift till Waiting (static void 'changeStatus')|
+3|2|spara /fil/|Uppdatera: static void 'spara')|
+3|2|ladda /fil/|Uppdatera: static void 'ReadListFromFile')|
+3|2|beskriv /allt|Uppdatera: static void 'PrintToDoList')|
+3|2|ny /uppgift/|Uppdatera: static void 'newEntry')|
+3|1|Refaktorera|Kolla igenom koden och förenkla det som är möjligt, förbättra och använd gemensamma staticmetoder|

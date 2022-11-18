@@ -14,7 +14,7 @@ namespace dtp15_todolist
         public const int Ready = 3;
         public static string lastFile = "";
         public static bool hasLoaded = false;
-        public static string task;
+        public static string Task;
 
         public static string StatusToString(int status)
         {
@@ -58,7 +58,7 @@ namespace dtp15_todolist
         }
         public static void ReadListFromFile(string command)
         {
-            string[]cmd = command.Split(' ');
+            string[]cmd = command.Split(' ', 2);
             string filename;
 
             if(cmd.Length > 1)
@@ -208,19 +208,19 @@ namespace dtp15_todolist
 
             if (uppgift.Length == 1)
             {
-                Todo.task = MyIO.ReadCommand("Skriv in uppgiftens namn: ");                
+                Todo.Task = MyIO.ReadCommand("Skriv in uppgiftens namn: ");                
             }
             else
             {
                 Console.WriteLine($"Skapa en ny uppgift med namn: '{uppgift[1]}'");
-                Todo.task = uppgift[1];                
+                Todo.Task = uppgift[1];                
             }
             
             int prio = Convert.ToInt32(MyIO.ReadCommand("Skriv in prioritet(1 - 4): "));
             string taskDescription = MyIO.ReadCommand("Skriv in en uppgiftsbeskrivning: ");
-            Todo.TodoItem item = new Todo.TodoItem(prio, task, taskDescription);
+            Todo.TodoItem item = new Todo.TodoItem(prio, Todo.Task, taskDescription);
             Todo.list.Add(item);
-            Console.WriteLine($"Uppgiften '{Todo.task}' (prio: {prio}) är nu tillagd!");
+            Console.WriteLine($"Uppgiften '{Todo.Task}' (prio: {prio}) är nu tillagd!");
         }
     }
     class MainClass
